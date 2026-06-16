@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio - Asim Lone</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/favicon.png" sizes="768x768">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            white: '#FFFFFF',      
+                            whiteHover: '#F0F9FF', 
+                            sky: '#38BDF8', // Highlight color for "Playground"
+                            dark: '#58B0DF', // Replaced #082f49 with #58B0DF
+                            card: 'rgba(88, 176, 223, 0.6)',
+                            nav: 'rgba(88, 176, 223, 0.8)', // #58B0DF with transparency
+                            textSecondary: '#FFFFFF' // Changed all text to white
+                        }
+                    },
+                    backgroundImage: {
+                        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #58B0DF;
+            color: #ffffff;
+            scrollbar-width: auto;
+            scrollbar-color: #ffffff #58B0DF;
+        }
+
+        body::-webkit-scrollbar {
+            width: 12px;
+        }
+        body::-webkit-scrollbar-track {
+            background: #58B0DF;
+            border-left: 1px solid #4a9bc4;
+        }
+        body::-webkit-scrollbar-thumb {
+            background-color: #ffffff;
+            border-radius: 6px;
+            border: 3px solid #58B0DF;
+        }
+        body::-webkit-scrollbar-thumb:hover {
+            background-color: #e0f2fe;
+        }
+
+        .bg-fixed-custom {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -2;
+            background-size: cover;
+            background-position: center;
+            background-image: url('/bgmobile.avif');
+        }
+
+        @media (min-width: 768px) {
+            .bg-fixed-custom {
+                background-image: url('/bgtab.avif');
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .bg-fixed-custom {
+                background-image: url('/bgdesktop.avif');
+            }
+        }
+        
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            /* Updated overlay to use #58B0DF equivalents with low opacity */
+            background: linear-gradient(180deg, rgba(88,176,223,0.1) 0%, rgba(88,176,223,0.05) 50%, rgba(88,176,223,0.4) 100%);
+        }
+
+        .bg-blur-layer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            backdrop-filter: blur(0px);
+            background-color: transparent;
+            transition: backdrop-filter 0.8s ease, background-color 0.8s ease;
+            pointer-events: none;
+        }
+
+        .nav-item.active {
+            background-color: #ffffff;
+            color: #58B0DF;
+            font-weight: 600;
+        }
+        
+        .nav-container {
+            animation: slideUpNav 1s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            transform: translate(-50%, 150%);
+            left: 50%;
+            opacity: 0;
+        }
+        
+        @keyframes slideUpNav {
+            to { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 1s cubic-bezier(0.5, 0, 0, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Portfolio Specific Styles */
+        .portfolio-item {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .portfolio-item.hide {
+            display: none;
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        
+        /* Modal Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; backdrop-filter: blur(0px); }
+            to { opacity: 1; backdrop-filter: blur(8px); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        /* Width of the entire scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        /* Track (background area the scrollbar moves in) */
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1; 
+        }
+
+        /* Thumb (the draggable scrollbar handle) */
+        ::-webkit-scrollbar-thumb {
+            background: #58B0DF; 
+            border-radius: 6px;
+        }
+
+        /* Thumb on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4196c7; 
+        }
+
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-white selection:text-brand-dark">
+
+    <div class="bg-fixed-custom"></div>
+    <div class="bg-overlay"></div>
+    <div class="bg-blur-layer" id="blurLayer"></div>
+
+    <div class="fixed top-6 right-6 md:top-8 md:right-8 z-50 flex gap-4">
+        <!-- Back to Home Button -->
+        <a href="index.html" class="bg-brand-white hover:bg-brand-whiteHover text-brand-dark font-semibold py-2.5 px-6 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-1 text-sm no-underline inline-flex items-center gap-2">
+            <i class="fa-solid fa-arrow-left text-brand-dark"></i> Back to Home
+        </a>
+    </div>
+
+    <nav class="nav-container fixed bottom-6 sm:bottom-8 left-1/2 transform -translate-x-1/2 z-50 w-[95%] sm:w-auto max-w-[95vw] pointer-events-none">
+        <div class="bg-brand-nav backdrop-blur-md rounded-full px-1 py-1 sm:px-2 sm:py-2 flex items-center justify-center gap-1 sm:gap-2 shadow-2xl border border-white/10 overflow-x-auto whitespace-nowrap scrollbar-hide pointer-events-auto">
+            <a href="index.html#home" class="nav-item flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 rounded-full text-sm transition-all duration-300 text-white/80 hover:text-white shrink-0">
+                <i class="fa-regular fa-user text-lg sm:text-base"></i>
+                <span class="hidden sm:inline">Home</span>
+            </a>
+            <a href="index.html#summary" class="nav-item flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 rounded-full text-sm transition-all duration-300 text-white/80 hover:text-white shrink-0">
+                <i class="fa-regular fa-folder-open text-lg sm:text-base"></i>
+                <span class="hidden sm:inline">Summary</span>
+            </a>
+            <a href="index.html#experience" class="nav-item flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 rounded-full text-sm transition-all duration-300 text-white/80 hover:text-white shrink-0">
+                <i class="fa-regular fa-file-lines text-lg sm:text-base"></i>
+                <span class="hidden sm:inline">Experience</span>
+            </a>
+            <a href="#" class="nav-item active flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 rounded-full text-sm transition-all duration-300 text-white/80 hover:text-white shrink-0">
+                <i class="fa-solid fa-layer-group text-lg sm:text-base"></i>
+                <span class="hidden sm:inline">Portfolio</span>
+            </a>
+            <a href="index.html#skills" class="nav-item flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 rounded-full text-sm transition-all duration-300 text-white/80 hover:text-white shrink-0">
+                <i class="fa-solid fa-bolt text-lg sm:text-base"></i>
+                <span class="hidden sm:inline">Skills</span>
+            </a>
+            <a href="index.html#links" class="nav-item flex items-center justify-center gap-2 px-4 py-3 sm:py-2.5 rounded-full text-sm transition-all duration-300 text-white/80 hover:text-white shrink-0">
+                <i class="fa-solid fa-link text-lg sm:text-base"></i>
+                <span class="hidden sm:inline">Links</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Note: Changed max-w from 800px to 1200px to give the grid a beautiful centered view -->
+    <main class="w-full max-w-[1200px] mx-auto px-6 md:px-12 pt-32 pb-40">
+
+        <!-- Portfolio Header Section -->
+        <section class="mb-16 section-block reveal active">
+            <div class="flex items-center gap-2 mb-6">
+                <div class="w-2 h-2 rounded-full bg-brand-white animate-pulse"></div>
+                <span class="text-sm font-medium text-white/90 drop-shadow-md tracking-wider uppercase">My Showcase</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-tight drop-shadow-lg">
+                Selected <span class="text-brand-sky drop-shadow-[0_2px_4px_rgba(255, 255, 255, 0.8)]">Works</span>
+            </h1>
+            <p class="text-lg md:text-xl text-white max-w-2xl leading-relaxed drop-shadow-[0_2px_4px_rgba(255, 255, 255, 0.8)]">
+                A comprehensive collection of my digital craftsmanship. From scalable web applications to high-converting landing pages and visually striking graphic designs.
+            </p>
+        </section>
+
+        <!-- PORTFOLIO SECTION -->
+        <section id="portfolio-grid-section" class="section-block reveal">
+            
+            <!-- Modern Filter Tabs -->
+            <div class="inline-flex flex-wrap gap-1 mb-10 p-1.5 bg-brand-dark/40 border border-white/20 rounded-full backdrop-blur-md">
+                <button class="portfolio-filter-btn active px-5 py-2 rounded-full text-sm font-medium bg-brand-white text-brand-dark transition-all shadow-md shadow-brand-white/20" data-filter="all">All</button>
+                <button class="portfolio-filter-btn px-5 py-2 rounded-full text-sm font-medium bg-transparent text-white/80 hover:text-white hover:bg-white/10 transition-all" data-filter="webs">Websites</button>
+                <button class="portfolio-filter-btn px-5 py-2 rounded-full text-sm font-medium bg-transparent text-white/80 hover:text-white hover:bg-white/10 transition-all" data-filter="webapps">Web Apps</button>
+                <button class="portfolio-filter-btn px-5 py-2 rounded-full text-sm font-medium bg-transparent text-white/80 hover:text-white hover:bg-white/10 transition-all" data-filter="gfx">Design</button>
+            </div>
+
+            <!-- Portfolio Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 lg:gap-8 items-stretch" id="portfolio-grid">
+                
+                <a href="https://alfatehcreative.agency/" target="_blank" class="portfolio-item block relative group overflow-hidden bg-transparent rounded-xl" data-category="webs">
+                    <img src="/alfatehweb.avif" alt="Alfateh Website mockup shown on a laptop and smartphone device" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+
+                <a href="urbanthreads.html" class="portfolio-item block relative group overflow-hidden bg-transparent rounded-xl" data-category="webs">
+                    <img src="/projectchimera.avif" alt="Project Chimera custom website interface preview layout" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+
+                <a href="auraestate.html" class="portfolio-item block relative group overflow-hidden bg-transparent rounded-xl" data-category="webs">
+                    <img src="/auraestates.avif" alt="Auraestate Real Estate website UI layout presentation" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+
+                <!-- GFX Items -->
+                <a href="javascript:void(0);" class="portfolio-item gfx-lightbox-btn block relative group overflow-hidden bg-transparent rounded-xl cursor-zoom-in" data-src="/umrahgfx.avif" data-category="gfx">
+                    <img src="/umrahgfx.avif" alt="Umrah e-Visa and flight tickets social media advertisement banner design" class="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+
+                <a href="javascript:void(0);" class="portfolio-item gfx-lightbox-btn block relative group overflow-hidden bg-transparent rounded-xl cursor-zoom-in" data-src="/jummahgfx.avif" data-category="gfx">
+                    <img src="/jummahgfx.avif" alt="Jummah Mubarak greeting poster design featuring a mosque dome" class="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+                
+                <a href="javascript:void(0);" class="portfolio-item gfx-lightbox-btn block relative group overflow-hidden bg-transparent rounded-xl cursor-zoom-in" data-src="/flightgfx.avif" data-category="gfx">
+                    <img src="/webdesign.jpg" alt="Travel agency promotional banner design for flight bookings" class="w-full h-auto object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+
+                <a href="https://alfatehcreatives.github.io/Alfateh_Ledger/index.html" target="_blank" class="portfolio-item block relative group overflow-hidden bg-transparent rounded-xl" data-category="webapps">
+                    <img src="/ledgerwebapp.avif" alt="Ledger accounting web application user interface preview" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+
+                <a href="https://karobarsmart.alfatehcreative.agency/" target="_blank" class="portfolio-item block relative group overflow-hidden bg-transparent rounded-xl" data-category="webapps">
+                    <img src="/kswebapp.avif" alt="Point of Sale POS web app interface dashboard showcase" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+
+                <a href="https://alfatehcreatives.github.io/Decent-Mobile/" target="_blank" class="portfolio-item block relative group overflow-hidden bg-transparent rounded-xl" data-category="webapps">
+                    <img src="/decentwebapp.avif" alt="Decent Shop e-commerce web application dashboard preview" class="w-full h-full object-contain transform group-hover:scale-105 transition-transform duration-700 ease-out shadow-lg group-hover:shadow-white/20">
+                </a>
+
+            </div>
+
+        </section>
+
+        <footer class="mt-32 pt-8 border-t border-white/20 flex flex-col md:flex-row items-center justify-between gap-4 text-sm font-medium text-white/80 pb-10">
+            <p>© 2026 Asim Lone. All rights reserved.</p>
+            <div class="flex gap-4">
+                <a href="index.html" class="hover:text-brand-white transition-colors">Home</a>
+                <a href="mailto:asimlone.global@gmail.com" class="hover:text-brand-white transition-colors">Contact</a>
+            </div>
+        </footer>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- 1. Dynamic Background Blur on Scroll ---
+            const blurLayer = document.getElementById('blurLayer');
+
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    blurLayer.style.backdropFilter = 'blur(4px)';
+                    blurLayer.style.backgroundColor = 'rgba(88, 176, 223, 0.3)'; // Match index transparency
+                } else {
+                    blurLayer.style.backdropFilter = 'blur(0px)';
+                    blurLayer.style.backgroundColor = 'transparent';
+                }
+            });
+
+            // --- 2. Smooth Reveal Animations ---
+            const revealElements = document.querySelectorAll('.reveal');
+            
+            const revealObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            revealElements.forEach(el => revealObserver.observe(el));
+
+            // --- 3. Portfolio Filtering Logic ---
+            const filterBtns = document.querySelectorAll('.portfolio-filter-btn');
+            const portfolioItems = document.querySelectorAll('.portfolio-item');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    // Reset all buttons
+                    filterBtns.forEach(b => {
+                        b.classList.remove('active', 'bg-brand-white', 'text-brand-dark', 'shadow-md', 'shadow-brand-white/20');
+                        b.classList.add('bg-transparent', 'text-white/80');
+                    });
+                    
+                    // Activate clicked button
+                    btn.classList.remove('bg-transparent', 'text-white/80');
+                    btn.classList.add('active', 'bg-brand-white', 'text-brand-dark', 'shadow-md', 'shadow-brand-white/20');
+
+                    const filterValue = btn.getAttribute('data-filter');
+
+                    // Filter items
+                    portfolioItems.forEach(item => {
+                        if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                            item.classList.remove('hide');
+                        } else {
+                            item.classList.add('hide');
+                        }
+                    });
+                });
+            });
+        });
+
+        // --- 4. Lightbox Logic for GFX Images ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const designButtons = document.querySelectorAll(".gfx-lightbox-btn");
+
+            designButtons.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    const imgSrc = btn.getAttribute("data-src");
+                    const imgAlt = btn.querySelector("img").getAttribute("alt");
+
+                    // Create Modal Elements dynamically
+                    const overlay = document.createElement("div");
+                    overlay.className = "fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4 cursor-zoom-out dynamic-lightbox animate-fade-in";
+                    
+                    const imgContainer = document.createElement("div");
+                    imgContainer.className = "relative max-w-full max-h-[90vh] flex items-center justify-center pointer-events-auto";
+
+                    const fullImg = document.createElement("img");
+                    fullImg.src = imgSrc;
+                    fullImg.alt = imgAlt;
+                    fullImg.className = "max-w-full max-h-[85vh] rounded-lg shadow-2xl object-contain border border-white/10";
+
+                    // Close button
+                    const closeBtn = document.createElement("button");
+                    closeBtn.innerHTML = "&#x2715;";
+                    closeBtn.className = "absolute -top-10 right-0 text-white text-2xl font-bold opacity-70 hover:opacity-100 transition-opacity cursor-pointer";
+
+                    // Append setup
+                    imgContainer.appendChild(fullImg);
+                    imgContainer.appendChild(closeBtn);
+                    overlay.appendChild(imgContainer);
+                    document.body.appendChild(overlay);
+                    document.body.style.overflow = "hidden"; // Stop background body scrolling
+
+                    // Close actions
+                    const closeModal = () => {
+                        overlay.style.opacity = '0';
+                        overlay.style.transition = 'opacity 0.3s ease';
+                        setTimeout(() => {
+                            overlay.remove();
+                            document.body.style.overflow = "";
+                        }, 300);
+                    };
+
+                    overlay.addEventListener("click", closeModal);
+                    closeBtn.addEventListener("click", closeModal);
+                    
+                    // ESC key to close
+                    const keyHandler = (event) => {
+                        if (event.key === "Escape") {
+                            closeModal();
+                            document.removeEventListener("keydown", keyHandler);
+                        }
+                    };
+                    document.addEventListener("keydown", keyHandler);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
